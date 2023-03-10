@@ -24,6 +24,8 @@ function HallOfFame() {
     const imagesListRef = ref(storage, 'awards/')
     const [imageMarathonUrls, setImageMarathonUrls] = useState([])
     const imagesMarathonListRef = ref(storage, 'marathons/')
+    const [imageAcademicUrls, setImageAcademicUrls] = useState([])
+    const imagesAcademicListRef = ref(storage, 'academics/')
 
     useEffect(() => {
         listAll(imagesListRef).then((res) => {
@@ -42,6 +44,17 @@ function HallOfFame() {
                 getDownloadURL(item).then((url) => {
 //                    console.log(url)
                     setImageMarathonUrls((prev) => [...prev, url])
+                })
+            })
+        })
+    }, [])
+
+    useEffect(() => {
+        listAll(imagesAcademicListRef).then((res) => {
+            res.items.forEach((item) => {
+                getDownloadURL(item).then((url) => {
+//                    console.log(url)
+                    setImageAcademicUrls((prev) => [...prev, url])
                 })
             })
         })
@@ -70,6 +83,18 @@ function HallOfFame() {
                 imageMarathonUrls.length > 0 ? (
                 <Col className='col-lg-6'>
                     <TinderCards imageUrls={imageMarathonUrls}></TinderCards>
+                </Col>
+            ) : (
+                <div>
+                    <h3 style={{ color: 'yellow' }}>
+                        There is no image yet.
+                    </h3>
+                </div>
+                )
+            }
+                imageAcademicUrls.length > 0 ? (
+                <Col className='col-lg-6'>
+                    <TinderCards imageUrls={imageAcademicUrls}></TinderCards>
                 </Col>
             ) : (
                 <div>

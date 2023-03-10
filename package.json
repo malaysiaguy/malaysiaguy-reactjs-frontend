@@ -1,5 +1,5 @@
 {
-  "name": "mern-profile",
+  "name": "mern-profile-tinder",
   "version": "1.0.0",
   "description": "Profile app for malaysiaguy website",
   "proxy": "http://127.0.0.1:5000",
@@ -27,5 +27,14 @@
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^6.2.8"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malaysiaguy/react-tinder-swipe.git"
+  },
+  "bugs": {
+    "url": "https://github.com/malaysiaguy/react-tinder-swipe/issues"
+  },
+  "homepage": "https://github.com/malaysiaguy/react-tinder-swipe#readme"
 }

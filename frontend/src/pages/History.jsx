@@ -11,6 +11,7 @@ import CustomAccordion from '../components/CustomAccordion'
 import Academic from '../components/Academic'
 import Knowledge from '../components/Knowledge'
 import Coursework from '../components/Coursework'
+import dbFirebase from '../firebase'
 import { getAcademic, reset } from '../features/academic/academicSlice'
 import { getKnowledge } from '../features/knowledge/knowledgeSlice'
 import { getCoursework } from '../features/coursework/courseworkSlice'
@@ -30,6 +31,15 @@ function History() {
     const { items: knowledgesitems, requestSort: requestSortKnowledge } = useSortableData(knowledges)
     const { items: courseworkitems, requestSort: requestSortCoursework } = useSortableData(courseworks)
     const [ state, setState ] = useState(user)
+    const [ academicFB, setAcademicFB ] = useState([])
+
+    const fetchAcademicFB = async () => {
+        const response = dbFirebase.collection('academics')
+        const dataFB = await response.get()
+        dataFB.docs.forEach( item => {
+            setAcademicFB([...academicFB,item.data()])
+        })
+    }
 
     useEffect(() => {
         const userData = {
@@ -89,12 +99,50 @@ function History() {
         }
     }, [user, isErrorCoursework, messageCoursework, dispatch])
 
+    useEffect(() => {
+        fetchAcademicFB();
+    }, [])
+
 {/*    if(isLoadingAcademic && isLoadingKnowledge && isLoadingCoursework) {
         return <Spinner />
     }
 */}
     return (
         <MainScreen title1='HISTORY' title2='历史' title3='SEJARAH'>
+            {
+                academicFB ? (
+                    <CustomAccordion header='Education 教育 Pendidikan' children={
+                            <Table responsive striped>
+                                <thead bgcolor='grey'>
+                                    <tr>
+                                        <th className='th col-sm-3' onClick={() => requestSortAcademic('years')}>Year</th>
+                                        <th className='th col-sm-4' onClick={() => requestSortAcademic('name')}>Institution</th>
+                                        <th className='th col-sm-5' onClick={() => requestSortAcademic('qualification')}>Qualification</th>
+                                    </tr>
+                                </thead>
+                                 {
+                                    academicFB.map((academic, key) => (
+                                    <tbody>
+                                        <tr key={key}>
+                                            <td className='td col-sm-3'>{format(new Date(academic.years), 'MM/yyyy')}</td>
+                                            <td className='td col-sm-4'>{academic.name}</td>
+                                            <td className='td col-sm-5'>{academic.qualification}</td>
+                                        </tr>
+                                    </tbody>
+                                ))}
+                            </Table>
+                    } item='accordionItem0'>
+                    </CustomAccordion>
+                ) : (
+                    <div>
+                        <h3>
+                            You have not enter any data yet.
+                            <br />
+                            Please add your data here
+                        </h3>
+                        <Academic />
+                    </div>
+                ) }
             {
                 courseworkitems ? (
                     <CustomAccordion header='Coursework 课程作业 Kerja Kursus' children={
